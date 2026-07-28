@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOZEFRAME - CONFIG GENERATOR</title>
+    <style>
+        /* TEMA MAIL V2 */
+        :root {
+            --bg-color: #0a0e14; /* Color3.fromRGB(10, 14, 20) */
+            --card-bg: #151b26; /* Color3.fromRGB(21, 27, 38) */
+            --primary: #6366f1; /* Indigo */
+            --primary-hover: #4f46e5;
+            --text-main: #d1d5db; /* Color3.fromRGB(209, 213, 219) */
+            --text-muted: #6b7280;
+            --border: #1f2937; /* Color3.fromRGB(31, 41, 65) */
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-size: 1.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-main);
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            margin-bottom: 6px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            background: var(--bg-color);
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+        
+        .checkbox-label:hover {
+            background: var(--border);
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        .output-section {
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 400px;
+            background: #000;
+            color: #34d399; /* Hacky green code */
+            font-family: 'Consolas', 'Courier New', monospace;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            resize: vertical;
+            margin-bottom: 15px;
+            outline: none;
+            font-size: 0.85rem;
+            white-space: pre;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        button:hover { background: var(--primary-hover); }
+        button.success { background: var(--success); }
+        
+        .toggle-all-btn {
+            background: var(--border);
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .toggle-all-btn:hover { background: #374151; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>⚡ MOZEFRAME - CONFIG GENERATOR ⚡</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Pilih barang dan setting sesukamu, script otomatis dibuat tanpa takut error/kurang koma!</p>
+    </header>
+
+    <div class="grid">
+        <!-- GENERAL SETTINGS -->
+        <div class="card">
+            <h2>Pengaturan Umum</h2>
+            <div class="checkbox-grid" style="grid-template-columns: 1fr; max-height: unset; margin-bottom: 15px;">
+                <label class="checkbox-label"><input type="checkbox" id="BuySeeds" checked> Beli Seeds</label>
+                <label class="checkbox-label"><input type="checkbox" id="BuyGears" checked> Beli Gears</label>
+                <label class="checkbox-label"><input type="checkbox" id="DailyDeal" checked> Ambil Daily Deal</label>
+                <label class="checkbox-label"><input type="checkbox" id="AutoSell" checked> Auto Sell</label>
+                <label class="checkbox-label"><input type="checkbox" id="BuyPets"> Tame Wild Pets</label>
+            </div>
+
+            <div class="form-group">
+                <label>Delay Beli (Detik)</label>
+                <input type="number" id="Delay" step="0.1" value="0.5">
+            </div>
+            
+            <div class="form-group">
+                <label>Max Bid Pets (Contoh: 50M)</label>
+                <input type="text" id="MaxBid" value="50M">
+            </div>
+        </div>
+
+        <!-- MAIL SETTINGS -->
+        <div class="card">
+            <h2>Pengaturan Mail (Kirim Barang)</h2>
+            <div class="checkbox-grid" style="grid-template-columns: 1fr; max-height: unset; margin-bottom: 15px;">
+                <label class="checkbox-label"><input type="checkbox" id="AutoMail" checked> Aktifkan Auto Mail</label>
+            </div>
+            <div class="form-group">
+                <label>Target Username (Penerima)</label>
+                <input type="text" id="TargetUsername" value="EdiTempest" placeholder="Username akun utama">
+            </div>
+            <div class="form-group">
+                <label>Interval Kirim Mail (Jam)</label>
+                <input type="number" id="MailIntervalHours" value="24">
+            </div>
+        </div>
+    </div>
+
+    <!-- PETS & CONFIG -->
+    <div class="card">
+        <h2>Target Wild Pets</h2>
+        <div class="grid" style="margin-bottom: 15px;">
+            <div class="form-group">
+                <label>Pilih Ukuran Pet</label>
+                <select id="SizePets">
+                    <option value="Any">Any (Bebas)</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Big">Big</option>
+                    <option value="Huge">Huge</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Pilih Mutasi Pet</label>
+                <select id="MutationPets">
+                    <option value="Any">Any (Bebas)</option>
+                    <option value="None">None (Tanpa Mutasi)</option>
+                    <option value="Rainbow">Rainbow</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="toggle-all-btn" onclick="toggleCategory('petList')">🔄 Pilih Semua / Batal Pilih</div>
+        <div class="checkbox-grid" id="petList"></div>
+    </div>
+
+    <div class="grid">
+        <!-- SEEDS -->
+        <div class="card">
+            <h2>Target Seeds</h2>
+            <div class="toggle-all-btn" onclick="toggleCategory('seedList')">🔄 Pilih Semua / Batal Pilih</div>
+            <div class="checkbox-grid" id="seedList"></div>
+        </div>
+
+        <!-- GEARS -->
+        <div class="card">
+            <h2>Target Gears</h2>
+            <div class="toggle-all-btn" onclick="toggleCategory('gearList')">🔄 Pilih Semua / Batal Pilih</div>
+            <div class="checkbox-grid" id="gearList"></div>
+        </div>
+    </div>
+
+    <div class="output-section">
+        <h2>Hasil Script Config</h2>
+        <button id="generateBtn" onclick="generateCode()" style="margin-bottom: 15px; background: #3b82f6;">⚙️ Generate Config</button>
+        <textarea id="outputCode" readonly spellcheck="false" placeholder="Klik tombol Generate Config di atas..."></textarea>
+        <button id="copyBtn" onclick="copyCode()">📋 Copy Script ke Clipboard</button>
+    </div>
+</div>
+
+<script>
+    // Data List
+    const pets = ["Raccoon", "Firefly", "Robin", "Bunny", "Frog", "Owl", "Deer", "Unicorn", "Bee", "Bald Eagle", "Golden Dragonfly", "Turtle", "Monkey"];
+    const seeds = [
+        "Carrot", "Apple", "Blueberry", "Strawberry", "Tomato", "Tulip", "Baby Cactus", "Bamboo", "Cactus", "Corn", 
+        "Horned Melon", "Pineapple", "Banana", "Coconut", "Glow Mushroom", "Grape", "Green Bean", "Mango", 
+        "Mushroom", "Acorn", "Cherry", "Dragon Fruit", "Fire Fern", "Poison Ivy", "Sunflower", "Ghost Pepper", 
+        "Poison Apple", "Pomegranate", "Venom Spitter", "Venus Fly Trap", "Dragon's Breath", "Hypno Bloom", 
+        "Moon Bloom", "Sun Bloom", "Star Fruit", "Eclipse Bloom", "Rocket Pop", "Atlantic Giant Pumpkin", 
+        "Amber Cranberry", "Briar Rose", "Romanesco", "Cinnamon Stick", "Conifer Cone", "Conifer Cone Sapling", 
+        "Plum", "Beanstalk", "Bone Blossom", "Buttercup", "Lotus", "Magic Beanstalk", "PartFruit", "Pinetree", 
+        "Pumpkin", "Thorn Rose", "Gold Seed", "Mega Seed", "Rainbow Seed", "Gold", "Mega", "Rainbow", 
+        "Blue Apple", "Red Apple", "Diamond", "Fairy's Bloom", "Solar Flare", "Eclipse", "Crate", "All"
+    ];
+    const gears = ["Legendary Sprinkler", "Super Sprinkler", "Super Watering Can", "Trowel", "Rare Sprinkler", "Uncommon Sprinkler", "Common Sprinkler", "Basic Pot", "All"];
+
+    // Fungsi Render Checkbox
+    function renderCheckboxes(containerId, items, defaultChecked) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = ""; // Clear existing
+        items.forEach(item => {
+            const lbl = document.createElement('label');
+            lbl.className = 'checkbox-label';
+            const isChecked = defaultChecked.includes(item) ? "checked" : "";
+            lbl.innerHTML = `<input type="checkbox" value="${item}" ${isChecked}> <span>${item}</span>`;
+            container.appendChild(lbl);
+        });
+    }
+
+    // Default Check List
+    const defaultPets = ["Raccoon"];
+    const defaultSeeds = ["Plum", "Sun Bloom", "Star Fruit", "Dragon's Breath", "Hypno Bloom", "Moon Bloom", "Pineapple", "Cinnamon Stick", "Conifer Cone", "Bamboo", "Carrot", "Tulip", "Mushroom", "Mango", "Acorn"];
+    const defaultGears = ["Legendary Sprinkler", "Super Sprinkler", "Super Watering Can", "Trowel"];
+
+    renderCheckboxes('petList', pets, defaultPets);
+    renderCheckboxes('seedList', seeds, defaultSeeds);
+    renderCheckboxes('gearList', gears, defaultGears);
+
+    // Toggle Semua per Kategori
+    window.toggleCategory = function(containerId) {
+        const container = document.getElementById(containerId);
+        const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+        let allChecked = true;
+        checkboxes.forEach(cb => { if(!cb.checked) allChecked = false; });
+        
+        checkboxes.forEach(cb => { cb.checked = !allChecked; });
+        generateCode();
+    };
+
+    // Ambil Data Terpilih
+    function getCheckedValues(containerId) {
+        const checkboxes = document.getElementById(containerId).querySelectorAll('input[type="checkbox"]');
+        let result = "";
+        checkboxes.forEach(cb => {
+            // Tulis false jika tidak dicentang (sesuai request user yang pakai false untuk gear yang tidak dipilih)
+            result += `        ["${cb.value}"] = ${cb.checked},\n`;
+        });
+        return result;
+    }
+
+    // Fungsi Utama Generate Script (TANPA BACKSLASH DI TEMPLATE LITERAL)
+    function generateCode() {
+        const BuySeeds = document.getElementById('BuySeeds').checked;
+        const BuyGears = document.getElementById('BuyGears').checked;
+        const DailyDeal = document.getElementById('DailyDeal').checked;
+        const AutoSell = document.getElementById('AutoSell').checked;
+        const AutoMail = document.getElementById('AutoMail').checked;
+        const BuyPets = document.getElementById('BuyPets').checked;
+        
+        const Delay = document.getElementById('Delay').value || "0.5";
+        const TargetUsername = document.getElementById('TargetUsername').value;
+        const MailIntervalHours = document.getElementById('MailIntervalHours').value || "24";
+        const MaxBid = document.getElementById('MaxBid').value || "50M";
+        
+        const SizePets = document.getElementById('SizePets').value;
+        const MutationPets = document.getElementById('MutationPets').value;
+
+        const petsCode = getCheckedValues('petList');
+        const seedsCode = getCheckedValues('seedList');
+        const gearsCode = getCheckedValues('gearList');
+
+        // Note: I am writing the template literal normally here.
+        const code = "getgenv().MuzeAutoBuyConfig = {\n" +
+            "    BuySeeds = " + BuySeeds + ",\n" +
+            "    BuyGears = " + BuyGears + ",\n" +
+            "    DailyDeal = " + DailyDeal + ",\n" +
+            "    AutoSell = " + AutoSell + ",\n" +
+            "    Delay = " + Delay + ",\n" +
+            "    AutoMail = " + AutoMail + ",\n" +
+            "    TargetUsername = \"" + TargetUsername + "\",\n" +
+            "    MailIntervalHours = " + MailIntervalHours + ",\n" +
+            "    BuyPets = " + BuyPets + ",\n" +
+            "    MaxBid = \"" + MaxBid + "\",\n\n" +
+            "    Pets = {\n" + petsCode + "    },\n\n" +
+            "    SizePets = \"" + SizePets + "\",\n" +
+            "    MutationPets = \"" + MutationPets + "\",\n\n" +
+            "    Seeds = {\n" + seedsCode + "    },\n\n" +
+            "    Gears = {\n" + gearsCode + "    }\n" +
+            "}\n\n" +
+            "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/azellsennse/mujeee/refs/heads/main/buyerkaitun.lua\"))()";
+
+        document.getElementById('outputCode').value = code;
+    }
+
+    // Fungsi Copy ke Clipboard
+    window.copyCode = function() {
+        const output = document.getElementById('outputCode');
+        output.select();
+        output.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(output.value).then(() => {
+            const btn = document.getElementById('copyBtn');
+            btn.innerText = "✅ Berhasil Di-Copy ke Clipboard!";
+            btn.classList.add("success");
+            setTimeout(() => {
+                btn.innerText = "📋 Copy Script ke Clipboard";
+                btn.classList.remove("success");
+            }, 2000);
+        });
+    };
+
+    // Hapus auto-update agar murni manual lewat tombol Generate
+    // Panggil sekali untuk kosongkan
+    document.getElementById('outputCode').value = "";
+</script>
+
+</body>
+</html>
