@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOZEFRAME - CONFIG & MONITOR</title>
+    <style>
+        /* TEMA MAIL V2 & MOZEFRAME */
+        :root {
+            --bg-color: #080a0f;
+            --card-bg: #11141b;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --text-main: #e2e8f0;
+            --text-muted: #64748b;
+            --border: #1e293b;
+            --success: #10b981;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --neon-blue: #0ea5e9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+        }
+
+        /* LOGIN SCREEN */
+        #login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(8, 10, 15, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .login-box {
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+        }
+        
+        .login-box h2 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        /* NAVIGATION TABS */
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .tab-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 12px 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* CARD SYSTEM */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* TOOLBAR (SEARCH & FILTERS) */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .search-bar {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .filter-btn.active {
+            background: var(--neon-blue);
+            color: #fff;
+            border-color: var(--neon-blue);
+        }
+
+        /* INVENTORY GRID */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .inv-card {
+            background: linear-gradient(145deg, #131720 0%, #0d1016 100%);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .inv-card:hover {
+            border-color: var(--neon-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.15);
+        }
+
+        .inv-card img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: rgba(0,0,0,0.3);
+            padding: 2px;
+        }
+
+        .inv-details { flex: 1; }
+        .inv-name { font-size: 0.9rem; font-weight: bold; color: var(--text-main); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; }
+        .inv-stats { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); }
+        .inv-count { color: var(--neon-blue); font-weight: bold; font-size: 0.9rem; }
+        .inv-category { position: absolute; top: -5px; right: 10px; font-size: 0.6rem; background: var(--bg-color); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); border: 1px solid var(--border); }
+
+        /* MODAL */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+            width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8);
+            align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background-color: var(--card-bg); margin: auto; padding: 25px;
+            border: 1px solid var(--primary); border-radius: 12px; width: 90%; max-width: 500px;
+            position: relative;
+        }
+        .close-btn { color: var(--text-muted); position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-btn:hover { color: white; }
+        .modal-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid var(--border); }
+        .modal-row:last-child { border-bottom: none; }
+
+        /* ACCOUNTS LIST */
+        .accounts-list { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+        .acc-row { display: grid; grid-template-columns: 50px 200px 1fr 150px; align-items: center; background: #0d1016; border: 1px solid var(--border); padding: 12px 15px; border-radius: 8px; transition: 0.2s; }
+        .acc-row:hover { border-color: var(--text-muted); background: #11141b; }
+        .acc-rank { color: var(--text-muted); font-weight: bold; font-size: 0.9rem; }
+        .acc-name-wrapper { display: flex; align-items: center; gap: 10px; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px currentColor; }
+        .dot-on { color: var(--success); background: var(--success); }
+        .dot-stuck { color: var(--warning); background: var(--warning); }
+        .dot-off { color: var(--danger); background: var(--danger); }
+        .acc-name { font-weight: bold; font-size: 0.95rem; }
+        .acc-action { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .acc-sheckles { text-align: right; color: var(--warning); font-weight: bold; font-size: 0.95rem; }
+        .acc-sheckles span { font-size: 0.7rem; color: var(--text-muted); display: block; }
+
+        @media (max-width: 768px) {
+            .acc-row { grid-template-columns: 30px 1fr 100px; }
+            .acc-action { display: none; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+        }
+
+        /* FORMS */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: var(--text-muted); font-size: 0.85rem; font-weight: bold; }
+        input[type="text"], input[type="number"], input[type="password"], select { width: 100%; padding: 10px; background: var(--bg-color); border: 1px solid var(--border); border-radius: 6px; color: var(--text-main); outline: none; font-size: 0.9rem; }
+        input:focus, select:focus { border-color: var(--primary); }
+        
+        .checkbox-label { display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 6px; color: var(--text-main); font-size: 0.9rem; background: var(--bg-color); padding: 8px 10px; border-radius: 6px; border: 1px solid transparent; transition: 0.2s; }
+        .checkbox-label:hover { background: var(--border); }
+        .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; max-height: 250px; overflow-y: auto; padding-right: 5px; }
+        
+        .output-section { background: #000; border: 1px solid var(--primary); border-radius: 8px; padding: 20px; margin-top: 20px; }
+        textarea { width: 100%; height: 400px; background: #000; color: #34d399; font-family: 'Consolas', monospace; padding: 15px; border: none; resize: vertical; outline: none; font-size: 0.85rem; }
+        button { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem; width: 100%; transition: 0.2s; }
+        button:hover { background: var(--primary-hover); }
+        button.success { background: var(--success); }
+        .toggle-all-btn { background: var(--border); padding: 6px 12px; font-size: 0.8rem; border-radius: 4px; margin-bottom: 12px; display: inline-block; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div id="login-screen">
+    <div class="login-box">
+        <h2>🔒 MOZEFRAME LOGIN</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Masukkan Panel Key untuk mengelola bot kamu sendiri.</p>
+        <input type="text" id="panelKeyInput" placeholder="Masukkan Panel Key (Contoh: BuyerA)" style="margin-bottom: 15px; text-align: center;">
+        <button onclick="loginPanel()">Login ke Dashboard</button>
+    </div>
+</div>
+
+<!-- MAIN DASHBOARD (HIDDEN UNTIL LOGIN) -->
+<div class="container" id="main-app" style="display: none;">
+    <header>
+        <h1>⚡ MOZEFRAME - WEB PANEL ⚡</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            Panel Key: <strong id="display-key" style="color: var(--neon-blue);">••••••••</strong>
+            <span id="toggle-key-visibility" style="cursor: pointer; opacity: 0.8;" onclick="toggleKeyVisibility()" title="Tampilkan/Sembunyikan Key">👁️</span>
+        </p>
+    </header>
+
+    <div class="tabs">
+        <button id="btn-config" class="tab-btn" onclick="switchTab('config')">⚙️ Config Generator</button>
+        <button id="btn-monitor" class="tab-btn active" onclick="switchTab('monitor')">📊 Live Monitor</button>
+    </div>
+
+    <!-- TAB 1: CONFIG GENERATOR -->
+    <div id="tab-config" style="display: none;">
+        <div class="grid">
+            <div class="card">
+                <h2>Pengaturan Umum</h2>
+                <div class="checkbox-grid" style="grid-template-columns: 1fr; max-height: unset; margin-bottom: 15px;">
+                    <label class="checkbox-label"><input type="checkbox" id="BuySeeds" checked> Beli Seeds</label>
+                    <label class="checkbox-label"><input type="checkbox" id="BuyGears" checked> Beli Gears</label>
+                    <label class="checkbox-label"><input type="checkbox" id="DailyDeal" checked> Ambil Daily Deal</label>
+                    <label class="checkbox-label"><input type="checkbox" id="AutoSell" checked> Auto Sell</label>
+                    <label class="checkbox-label"><input type="checkbox" id="BuyPets"> Tame Wild Pets</label>
+                    <label class="checkbox-label"><input type="checkbox" id="Monitoring" checked style="accent-color: var(--neon-blue);"> <b style="color: var(--neon-blue);">Kirim Data ke Panel Ini</b></label>
+                </div>
+                <div class="form-group">
+                    <label>Delay Beli (Detik)</label>
+                    <input type="number" id="Delay" step="0.1" value="0.5">
+                </div>
+                <div class="form-group">
+                    <label>Max Bid Pets (Contoh: 50M)</label>
+                    <input type="text" id="MaxBid" value="50M">
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Pengaturan Mail (Kirim Barang)</h2>
+                <div class="checkbox-grid" style="grid-template-columns: 1fr; max-height: unset; margin-bottom: 15px;">
+                    <label class="checkbox-label"><input type="checkbox" id="AutoMail" checked> Aktifkan Auto Mail</label>
+                </div>
+                <div class="form-group">
+                    <label>Target Username (Penerima)</label>
+                    <input type="text" id="TargetUsername" value="EdiTempest">
+                </div>
+                <div class="form-group">
+                    <label>Interval Kirim Mail (Jam)</label>
+                    <input type="number" id="MailIntervalHours" value="24">
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Target Wild Pets</h2>
+            <div class="grid" style="margin-bottom: 15px;">
+                <div class="form-group"><label>Pilih Ukuran Pet</label><select id="SizePets"><option value="Any">Any (Bebas)</option><option value="Normal">Normal</option><option value="Big">Big</option><option value="Huge">Huge</option></select></div>
+                <div class="form-group"><label>Pilih Mutasi Pet</label><select id="MutationPets"><option value="Any">Any (Bebas)</option><option value="None">None (Tanpa Mutasi)</option><option value="Rainbow">Rainbow</option></select></div>
+            </div>
+            <div class="toggle-all-btn" onclick="toggleCategory('petList')">🔄 Pilih Semua / Batal Pilih</div>
+            <div class="checkbox-grid" id="petList"></div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Target Seeds</h2>
+                <div class="toggle-all-btn" onclick="toggleCategory('seedList')">🔄 Pilih Semua / Batal Pilih</div>
+                <div class="checkbox-grid" id="seedList"></div>
+            </div>
+            <div class="card">
+                <h2>Target Gears</h2>
+                <div class="toggle-all-btn" onclick="toggleCategory('gearList')">🔄 Pilih Semua / Batal Pilih</div>
+                <div class="checkbox-grid" id="gearList"></div>
+            </div>
+        </div>
+
+        <div class="output-section">
+            <button id="generateBtn" onclick="generateCode()" style="margin-bottom: 15px; background: var(--primary);">⚙️ Generate Config</button>
+            <textarea id="outputCode" readonly spellcheck="false" placeholder="Klik tombol Generate Config..."></textarea>
+            <button id="copyBtn" onclick="copyCode()">📋 Copy Script ke Clipboard</button>
+        </div>
+    </div>
+
+    <!-- TAB 2: LIVE MONITOR -->
+    <div id="tab-monitor">
+        <div class="card">
+            <h2>📦 Barang Terkumpul <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal; margin-left: 10px;">Total item semua akun</span></h2>
+            
+            <div class="toolbar">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="🔍 Cari nama item..." oninput="filterInventory()">
+                </div>
+                <div class="filter-group">
+                    <button class="filter-btn active" id="filter-All" onclick="setFilter('All')">Semua</button>
+                    <button class="filter-btn" id="filter-Seed" onclick="setFilter('Seed')">Seed</button>
+                    <button class="filter-btn" id="filter-Gear" onclick="setFilter('Gear')">Gear</button>
+                    <button class="filter-btn" id="filter-Pet" onclick="setFilter('Pet')">Pet</button>
+                </div>
+            </div>
+
+            <div class="inventory-grid" id="inventory-grid">
+                <div style="color: var(--text-muted); font-size: 0.9rem;">Menunggu data dari Panel Key ini...</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h2>👥 Accounts & Shekless List</h2>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">
+                    <span id="monitor-counter">🔄 Syncing...</span>
+                </div>
+            </div>
+            <div class="accounts-list" id="accounts-list"></div>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+        <button onclick="logoutPanel()" style="width: auto; background: var(--danger); padding: 8px 25px; border-radius: 8px; font-size: 0.9rem;">🚪 Logout dari Panel</button>
+    </div>
+</div>
+
+<!-- MODAL POPUP UNTUK DETAIL ITEM -->
+<div id="itemModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle" style="color: var(--primary); margin-bottom: 5px;">Item Name</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">Daftar akun yang memegang item ini:</p>
+        <div id="modalList"></div>
+    </div>
+</div>
+
+<script>
+    // --- GLOBAL DATA ---
+    const pets = ["Raccoon", "Firefly", "Robin", "Bunny", "Frog", "Owl", "Deer", "Unicorn", "Bee", "Bald Eagle", "Golden Dragonfly", "Turtle", "Monkey"];
+    const seeds = ["Carrot", "Apple", "Blueberry", "Strawberry", "Tomato", "Tulip", "Baby Cactus", "Bamboo", "Cactus", "Corn", "Horned Melon", "Pineapple", "Banana", "Coconut", "Glow Mushroom", "Grape", "Green Bean", "Mango", "Mushroom", "Acorn", "Cherry", "Dragon Fruit", "Fire Fern", "Poison Ivy", "Sunflower", "Ghost Pepper", "Poison Apple", "Pomegranate", "Venom Spitter", "Venus Fly Trap", "Dragon's Breath", "Hypno Bloom", "Moon Bloom", "Sun Bloom", "Star Fruit", "Eclipse Bloom", "Rocket Pop", "Atlantic Giant Pumpkin", "Amber Cranberry", "Briar Rose", "Romanesco", "Cinnamon Stick", "Conifer Cone", "Conifer Cone Sapling", "Plum", "Beanstalk", "Bone Blossom", "Buttercup", "Lotus", "Magic Beanstalk", "PartFruit", "Pinetree", "Pumpkin", "Thorn Rose", "Gold Seed", "Mega Seed", "Rainbow Seed", "Gold", "Mega", "Rainbow", "Blue Apple", "Red Apple", "Diamond", "Fairy's Bloom", "Solar Flare", "Eclipse", "Crate", "All"];
+    const gears = ["Legendary Sprinkler", "Super Sprinkler", "Super Watering Can", "Trowel", "Rare Sprinkler", "Uncommon Sprinkler", "Common Sprinkler", "Basic Pot", "All"];
+
+    let CURRENT_PANEL_KEY = localStorage.getItem("mozePanelKey") || "";
+    let monitorInterval = null;
+    let currentFilter = "All";
+    let globalInventoryData = []; 
+    let globalItemOwners = {}; // { itemName: [ {username, count} ] }
+
+    // --- LOGIN SYSTEM ---
+    if(CURRENT_PANEL_KEY) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        startMonitoring();
+    }
+
+    function loginPanel() {
+        const key = document.getElementById('panelKeyInput').value.trim();
+        if(key.length < 3) return alert("Panel Key minimal 3 huruf!");
+        localStorage.setItem("mozePanelKey", key);
+        CURRENT_PANEL_KEY = key;
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        startMonitoring();
+    }
+
+    let isKeyVisible = false;
+    window.toggleKeyVisibility = function() {
+        isKeyVisible = !isKeyVisible;
+        document.getElementById('display-key').innerText = isKeyVisible ? CURRENT_PANEL_KEY : "••••••••";
+        document.getElementById('toggle-key-visibility').innerText = isKeyVisible ? "🙈" : "👁️";
+    };
+
+    function logoutPanel() {
+        localStorage.removeItem("mozePanelKey");
+        location.reload();
+    }
+
+    // --- TAB SYSTEM ---
+    window.switchTab = function(tab) {
+        document.getElementById('tab-config').style.display = (tab === 'config') ? 'block' : 'none';
+        document.getElementById('tab-monitor').style.display = (tab === 'monitor') ? 'block' : 'none';
+        
+        document.getElementById('btn-config').className = (tab === 'config') ? 'tab-btn active' : 'tab-btn';
+        document.getElementById('btn-monitor').className = (tab === 'monitor') ? 'tab-btn active' : 'tab-btn';
+    };
+
+    // --- FIREBASE MONITORING ---
+    function startMonitoring() {
+        fetchMonitorData();
+        monitorInterval = setInterval(fetchMonitorData, 3000);
+    }
+
+    async function fetchMonitorData() {
+        if(!CURRENT_PANEL_KEY) return;
+        const url = `https://mozemonitor-default-rtdb.asia-southeast1.firebasedatabase.app/users/${CURRENT_PANEL_KEY}/accounts.json?r=${Math.random()}`;
+        
+        try {
+            document.getElementById('monitor-counter').innerText = "🔄 Syncing...";
+            const response = await fetch(url);
+            const data = await response.json();
+            document.getElementById('monitor-counter').innerText = "🟢 Live Update";
+            processMonitorData(data);
+        } catch (error) {
+            document.getElementById('monitor-counter').innerText = "🔴 Error Koneksi";
+        }
+    }
+
+    // Identify category of an item
+    function getItemCategory(name) {
+        if(seeds.includes(name)) return "Seed";
+        if(gears.includes(name)) return "Gear";
+        if(pets.includes(name)) return "Pet";
+        return "Lainnya";
+    }
+
+    function processMonitorData(data) {
+        const accList = document.getElementById('accounts-list');
+        if (!data || Object.keys(data).length === 0) {
+            accList.innerHTML = "<p style='color: var(--text-muted);'>Belum ada data dari Panel Key ini.</p>";
+            document.getElementById('inventory-grid').innerHTML = "";
+            return;
+        }
+
+        const now = Math.floor(Date.now() / 1000);
+        let accountsArray = [];
+        let rawInventory = {}; 
+        globalItemOwners = {}; 
+
+        for (let username in data) {
+            const acc = data[username];
+            const diff = now - acc.lastUpdate;
+            
+            let statusClass = "dot-on";
+            let statusText = "Farming";
+            if (diff > 15 && diff <= 60) { statusClass = "dot-stuck"; statusText = "Stuck"; }
+            else if (diff > 60) { statusClass = "dot-off"; statusText = "Offline"; }
+
+            accountsArray.push({
+                username: username,
+                coins: acc.coins || 0,
+                action: acc.action || "Idle",
+                ping: acc.ping || 0,
+                statusClass: statusClass,
+                statusText: statusText
+            });
+
+            if (acc.inventory) {
+                for(let item in acc.inventory) {
+                    if(!rawInventory[item]) rawInventory[item] = { count: 0, accounts: new Set() };
+                    rawInventory[item].count += acc.inventory[item];
+                    rawInventory[item].accounts.add(username);
+
+                    if(!globalItemOwners[item]) globalItemOwners[item] = [];
+                    globalItemOwners[item].push({ username: username, count: acc.inventory[item] });
+                }
+            }
+        }
+
+        // 1. RENDER ACCOUNTS
+        accountsArray.sort((a, b) => b.coins - a.coins);
+        accList.innerHTML = accountsArray.map((acc, i) => `
+            <div class="acc-row">
+                <div class="acc-rank">${i + 1}</div>
+                <div class="acc-name-wrapper"><span class="status-dot ${acc.statusClass}" title="${acc.statusText}"></span><span class="acc-name">${acc.username}</span></div>
+                <div class="acc-action">${acc.action} <span style="color:var(--text-muted);">(${acc.ping}ms)</span></div>
+                <div class="acc-sheckles">${formatNumber(acc.coins)}<span>SHEKLESS</span></div>
+            </div>
+        `).join("");
+
+        // 2. PROCESS INVENTORY
+        globalInventoryData = Object.keys(rawInventory).map(name => ({
+            name: name,
+            count: rawInventory[name].count,
+            accCount: rawInventory[name].accounts.size,
+            category: getItemCategory(name)
+        })).sort((a, b) => b.count - a.count);
+
+        filterInventory(); // Render based on current filter/search
+    }
+
+    // --- SEARCH & FILTER INVENTORY ---
+    window.setFilter = function(cat) {
+        currentFilter = cat;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('filter-' + cat).classList.add('active');
+        filterInventory();
+    }
+
+    window.filterInventory = function() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const grid = document.getElementById('inventory-grid');
+        
+        const filtered = globalInventoryData.filter(item => {
+            const matchSearch = item.name.toLowerCase().includes(query);
+            const matchCat = (currentFilter === "All") || (item.category === currentFilter);
+            return matchSearch && matchCat;
+        });
+
+        if(filtered.length === 0) {
+            grid.innerHTML = "<div style='color:var(--text-muted);'>Tidak ada item ditemukan.</div>";
+            return;
+        }
+
+        grid.innerHTML = "";
+        filtered.forEach(item => {
+            const imgId = "img-" + item.name.replace(/[^a-zA-Z0-9]/g, '');
+            const card = document.createElement('div');
+            card.className = "inv-card";
+            card.onclick = () => openModal(item.name);
+            
+            // local fallback avatar generated by canvas to prevent CORS/404 errors
+            card.innerHTML = `
+                <div class="inv-category">${item.category}</div>
+                <img id="${imgId}" src="${generateFallbackIcon(item.name)}" onerror="this.onerror=null; this.src=generateFallbackIcon('${item.name.replace(/'/g, "\\'")}');" alt="Icon">
+                <div class="inv-details" style="margin-top: 5px;">
+                    <div class="inv-name">${item.name}</div>
+                    <div class="inv-stats"><span>${item.accCount} akun</span><span class="inv-count">x${formatNumber(item.count)}</span></div>
+                </div>
+            `;
+            grid.appendChild(card);
+            
+            getFandomImageUrl(item.name).then(url => { if(url) document.getElementById(imgId).src = url; });
+        });
+    }
+
+    // Local Fallback Generator to avoid broken UI-Avatars links
+    function generateFallbackIcon(name) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 64; canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#1e293b'; ctx.fillRect(0,0,64,64);
+        ctx.fillStyle = '#e2e8f0'; ctx.font = 'bold 26px sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        let initials = name.substring(0, 2).toUpperCase();
+        const parts = name.split(' ');
+        if(parts.length > 1) initials = parts[0][0] + parts[1][0];
+        ctx.fillText(initials, 32, 34);
+        return canvas.toDataURL();
+    }
+
+    const fandomImageCache = {};
+    async function getFandomImageUrl(itemName) {
+        if(fandomImageCache[itemName]) return fandomImageCache[itemName];
+        try {
+            const url = `https://growagarden2.fandom.com/api.php?action=query&titles=File:${encodeURIComponent(itemName)}.png&prop=imageinfo&iiprop=url&format=json&origin=*`;
+            const res = await fetch(url);
+            const data = await res.json();
+            const pages = data.query.pages;
+            const pageId = Object.keys(pages)[0];
+            if (pageId !== "-1" && pages[pageId].imageinfo) {
+                fandomImageCache[itemName] = pages[pageId].imageinfo[0].url;
+                return fandomImageCache[itemName];
+            }
+        } catch(e) {}
+        return null;
+    }
+
+    function formatNumber(num) {
+        if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
+        if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
+        if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+        return num;
+    }
+
+    // --- MODAL SYSTEM ---
+    window.openModal = function(itemName) {
+        const modal = document.getElementById('itemModal');
+        document.getElementById('modalTitle').innerText = itemName;
+        
+        const listDiv = document.getElementById('modalList');
+        const owners = globalItemOwners[itemName] || [];
+        
+        // Sort owners by count descending
+        owners.sort((a,b) => b.count - a.count);
+        
+        listDiv.innerHTML = owners.map(o => `
+            <div class="modal-row">
+                <strong style="color: var(--text-main);">${o.username}</strong>
+                <span style="color: var(--neon-blue); font-weight: bold;">x${formatNumber(o.count)}</span>
+            </div>
+        `).join("");
+        
+        modal.style.display = 'flex';
+    }
+
+    window.closeModal = function() { document.getElementById('itemModal').style.display = 'none'; }
+    window.onclick = function(e) { if (e.target == document.getElementById('itemModal')) closeModal(); }
+
+    // --- CONFIG GENERATOR ---
+    function renderCheckboxes(containerId, items, defaultChecked) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = "";
+        items.forEach(item => {
+            const lbl = document.createElement('label'); lbl.className = 'checkbox-label';
+            const isChecked = defaultChecked.includes(item) ? "checked" : "";
+            lbl.innerHTML = "<input type='checkbox' value=\"" + item + "\" " + isChecked + "> <span>" + item + "</span>";
+            container.appendChild(lbl);
+        });
+    }
+
+    renderCheckboxes('petList', pets, ["Raccoon"]);
+    renderCheckboxes('seedList', seeds, ["Plum", "Sun Bloom", "Star Fruit", "Dragon's Breath", "Hypno Bloom", "Moon Bloom", "Pineapple", "Cinnamon Stick", "Conifer Cone", "Bamboo", "Carrot", "Tulip", "Mushroom", "Mango", "Acorn"]);
+    renderCheckboxes('gearList', gears, ["Legendary Sprinkler", "Super Sprinkler", "Super Watering Can", "Trowel"]);
+
+    window.toggleCategory = function(containerId) {
+        const container = document.getElementById(containerId);
+        const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+        let allChecked = true;
+        checkboxes.forEach(cb => { if(!cb.checked) allChecked = false; });
+        checkboxes.forEach(cb => { cb.checked = !allChecked; });
+    };
+
+    function getCheckedValues(containerId) {
+        let result = "";
+        document.getElementById(containerId).querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            result += "        [\"" + cb.value + "\"] = " + cb.checked + ",\n";
+        });
+        return result;
+    }
+
+    window.generateCode = function() {
+        const BuySeeds = document.getElementById('BuySeeds').checked;
+        const BuyGears = document.getElementById('BuyGears').checked;
+        const DailyDeal = document.getElementById('DailyDeal').checked;
+        const AutoSell = document.getElementById('AutoSell').checked;
+        const AutoMail = document.getElementById('AutoMail').checked;
+        const BuyPets = document.getElementById('BuyPets').checked;
+        const Monitoring = document.getElementById('Monitoring').checked;
+        
+        let Delay = document.getElementById('Delay').value || "0.5";
+        Delay = Delay.replace(',', '.'); // Mencegah error syntax Lua jika browser pakai koma
+        
+        const TargetUsername = document.getElementById('TargetUsername').value;
+        const MailIntervalHours = document.getElementById('MailIntervalHours').value || "24";
+        const MaxBid = document.getElementById('MaxBid').value || "50M";
+        
+        const SizePets = document.getElementById('SizePets').value;
+        const MutationPets = document.getElementById('MutationPets').value;
+
+        const code = "getgenv().MuzeAutoBuyConfig = {\n" +
+            "    PanelKey = \"" + CURRENT_PANEL_KEY + "\",\n" +
+            "    BuySeeds = " + BuySeeds + ",\n" +
+            "    BuyGears = " + BuyGears + ",\n" +
+            "    DailyDeal = " + DailyDeal + ",\n" +
+            "    AutoSell = " + AutoSell + ",\n" +
+            "    Delay = " + Delay + ",\n" +
+            "    AutoMail = " + AutoMail + ",\n" +
+            "    TargetUsername = \"" + TargetUsername + "\",\n" +
+            "    MailIntervalHours = " + MailIntervalHours + ",\n" +
+            "    BuyPets = " + BuyPets + ",\n" +
+            "    Monitoring = " + Monitoring + ",\n" +
+            "    MaxBid = \"" + MaxBid + "\",\n\n" +
+            "    Pets = {\n" + getCheckedValues('petList') + "    },\n\n" +
+            "    SizePets = \"" + SizePets + "\",\n" +
+            "    MutationPets = \"" + MutationPets + "\",\n\n" +
+            "    Seeds = {\n" + getCheckedValues('seedList') + "    },\n\n" +
+            "    Gears = {\n" + getCheckedValues('gearList') + "    }\n" +
+            "}\n\n" +
+            "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/azellsennse/mujeee/refs/heads/main/buyerkaitun.lua\"))()";
+
+        document.getElementById('outputCode').value = code;
+    }
+
+    window.copyCode = function() {
+        const output = document.getElementById('outputCode');
+        if(!output.value) return; 
+        output.select();
+        navigator.clipboard.writeText(output.value).then(() => {
+            const btn = document.getElementById('copyBtn');
+            btn.innerText = "✅ Berhasil Di-Copy ke Clipboard!";
+            btn.classList.add("success");
+            setTimeout(() => { btn.innerText = "📋 Copy Script ke Clipboard"; btn.classList.remove("success"); }, 2000);
+        });
+    };
+</script>
+
+</body>
+</html>
